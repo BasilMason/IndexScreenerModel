@@ -40,12 +40,10 @@ INDEX_UNIVERSE: list[IndexMeta] = [
     IndexMeta("^BVSP", "Bovespa", "Brazil", "South America", "BRL"),
 ]
 
-# Lookback windows (trading days) each return is calculated over, and the
-# weight applied to each when combining them into a single composite score.
-RETURN_WEIGHTS: dict[int, float] = {
-    10: 0.10,
-    20: 0.40,
-    30: 0.20,
-    60: 0.30,
+# Screening stages to run and the weight each contributes to final_score.
+# A stage only runs if it's listed here - add/remove entries to include or
+# exclude a stage. Weights across all listed stages must sum to 1.0.
+STAGE_WEIGHTS: dict[str, float] = {
+    "weighted_returns": 1.0,
 }
-assert abs(sum(RETURN_WEIGHTS.values()) - 1.0) < 1e-9, "RETURN_WEIGHTS must sum to 1.0"
+assert abs(sum(STAGE_WEIGHTS.values()) - 1.0) < 1e-9, "STAGE_WEIGHTS must sum to 1.0"
