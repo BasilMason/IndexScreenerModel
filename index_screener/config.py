@@ -39,3 +39,13 @@ INDEX_UNIVERSE: list[IndexMeta] = [
     IndexMeta("^TWII", "Taiwan Weighted", "Taiwan", "Asia-Pacific", "TWD"),
     IndexMeta("^BVSP", "Bovespa", "Brazil", "South America", "BRL"),
 ]
+
+# Lookback windows (trading days) each return is calculated over, and the
+# weight applied to each when combining them into a single composite score.
+RETURN_WEIGHTS: dict[int, float] = {
+    10: 0.10,
+    20: 0.40,
+    30: 0.20,
+    60: 0.30,
+}
+assert abs(sum(RETURN_WEIGHTS.values()) - 1.0) < 1e-9, "RETURN_WEIGHTS must sum to 1.0"
