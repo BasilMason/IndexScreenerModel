@@ -42,10 +42,14 @@ def compute_breadth(tickers: list[str]) -> tuple[pd.DataFrame, float]:
             row.update(compute_stock_breadth(ticker))
         except Exception as exc:
             print(f"WARNING: {ticker} failed, leaving as NaN: {exc}")
-            row.update({"current_price": float("nan"), "sma_50": float("nan"), "above_sma_50": None})
+            row.update({"current_price": float("nan"), "sma_50": float("nan"), "above_sma_50": pd.NA})
         rows.append(row)
 
     table = pd.DataFrame(rows)
+    # Nullable boolean dtype: a plain object column mixing True/False/None makes
+    # pandas' sum()/mean() silently collapse to an any()-like result instead of
+    # counting - "boolean" dtype keeps NA-aware sum/mean arithmetically correct.
+    table["above_sma_50"] = table["above_sma_50"].astype("boolean")
     valid_checks = table["above_sma_50"].dropna()
     breadth_pct = valid_checks.mean() * 100 if len(valid_checks) else float("nan")
     return table, breadth_pct

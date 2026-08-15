@@ -54,9 +54,9 @@ def _needs_fetch(conn: sqlite3.Connection, ticker: str) -> bool:
     return latest is None or (date.today() - latest).days > STALE_AFTER_DAYS
 
 
-def _fetch_and_store(conn: sqlite3.Connection, ticker: str) -> None:
+def _fetch_and_store(conn: sqlite3.Connection, ticker: str, period: str) -> None:
     """Pull fresh OHLCV data from Yahoo Finance and upsert it into the cache."""
-    history = yf.Ticker(ticker).history(period=FETCH_PERIOD)
+    history = yf.Ticker(ticker).history(period=period)
     if history.empty:
         raise ValueError("no price history returned")
 
@@ -72,16 +72,18 @@ def _fetch_and_store(conn: sqlite3.Connection, ticker: str) -> None:
     time.sleep(REQUEST_DELAY_SECONDS)
 
 
-def get_price_history(ticker: str, force_refresh: bool = False) -> pd.DataFrame:
+def get_price_history(ticker: str, force_refresh: bool = False, period: str = FETCH_PERIOD) -> pd.DataFrame:
     """Return cached daily OHLCV history for a ticker, oldest first (Date-indexed).
 
     Only calls Yahoo Finance if the ticker is missing from the cache, its cached
-    data is missing recent trading days, or force_refresh=True.
+    data is missing recent trading days, or force_refresh=True. `period` only
+    affects how much history is pulled on that external call (e.g. a smaller
+    window for a first pass on a new batch of tickers).
     """
     conn = _connect()
     try:
         if force_refresh or _needs_fetch(conn, ticker):
-            _fetch_and_store(conn, ticker)
+            _fetch_and_store(conn, ticker, period)
 
         df = pd.read_sql(
             "SELECT date, open, high, low, close, volume FROM prices WHERE ticker = ? ORDER BY date",
@@ -96,3 +98,12 @@ def get_price_history(ticker: str, force_refresh: bool = False) -> pd.DataFrame:
         raise ValueError("no price history in cache")
 
     return df.set_index("date").rename(columns=str.title)
+
+
+def populate_tickers(tickers: list[str], period: str = FETCH_PERIOD, force_refresh: bool = False) -> None:
+    """Warm the cache for a batch of tickers (e.g. a newly added index's constituents)."""
+    for ticker in tickers:
+        try:
+            get_price_history(ticker, force_refresh=force_refresh, period=period)
+        except Exception as exc:
+            print(f"WARNING: {ticker} failed to populate: {exc}")
