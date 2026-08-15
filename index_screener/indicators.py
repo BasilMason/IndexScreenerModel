@@ -81,6 +81,17 @@ def add_rankings(table: pd.DataFrame) -> pd.DataFrame:
     return table
 
 
+def reorder_columns(table: pd.DataFrame) -> pd.DataFrame:
+    """Group columns by return window (close/return/rank/percentile) instead of by calculation step."""
+    identity_cols = ["ticker", "name", "region", "prev_close_date", "prev_close"]
+    window_cols = [
+        f"{prefix}_{window}d{suffix}"
+        for window in RETURN_WEIGHTS
+        for prefix, suffix in [("close", "_ago"), ("return", ""), ("rank", ""), ("percentile", "")]
+    ]
+    return table[identity_cols + window_cols + ["weighted_percentile"]]
+
+
 def build_return_table() -> pd.DataFrame:
     """Iterate the index universe, fetch data, and assemble the indicator table.
 
@@ -106,6 +117,7 @@ def build_return_table() -> pd.DataFrame:
 
     table = pd.DataFrame(rows)
     table = add_rankings(table)
+    table = reorder_columns(table)
     table = table.sort_values("weighted_percentile", ascending=False, na_position="last").reset_index(drop=True)
     return table, failed
 

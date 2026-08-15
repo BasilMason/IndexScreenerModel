@@ -32,7 +32,7 @@ INDEX_UNIVERSE: list[IndexMeta] = [
     IndexMeta("^N225", "Nikkei 225", "Japan", "Asia-Pacific", "JPY"),
     IndexMeta("^HSI", "Hang Seng Index", "Hong Kong", "Asia-Pacific", "HKD"),
     IndexMeta("000001.SS", "Shanghai Composite", "China", "Asia-Pacific", "CNY"),
-    IndexMeta("000300.SS", "CSI 300", "China", "Asia-Pacific", "CNY"),
+    IndexMeta("^STI", "Straits Times Index", "Singapore", "Asia-Pacific", "SGD"),
     IndexMeta("^KS11", "KOSPI Composite", "South Korea", "Asia-Pacific", "KRW"),
     IndexMeta("^NSEI", "Nifty 50", "India", "Asia-Pacific", "INR"),
     IndexMeta("^AXJO", "S&P/ASX 200", "Australia", "Asia-Pacific", "AUD"),
