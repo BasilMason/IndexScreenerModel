@@ -9,9 +9,13 @@ from STAGE_WEIGHTS - no code changes needed.
 import pandas as pd
 
 from .config import INDEX_UNIVERSE, STAGE_WEIGHTS
+from .stages.breadth_confirmation import BreadthConfirmationStage
+from .stages.ema_trend import EmaTrendStage
 from .stages.weighted_returns import WeightedReturnsStage
 
-AVAILABLE_STAGES = {stage.name: stage for stage in [WeightedReturnsStage()]}
+AVAILABLE_STAGES = {
+    stage.name: stage for stage in [WeightedReturnsStage(), EmaTrendStage(), BreadthConfirmationStage()]
+}
 
 
 def run_screen(stage_weights: dict[str, float] = STAGE_WEIGHTS) -> pd.DataFrame:

@@ -6,12 +6,10 @@ to a 0-100 percentile, and RETURN_WEIGHTS is applied to the percentiles (not the
 to give this stage's weighted_returns_score.
 """
 
-import time
-
 import pandas as pd
 
 from ..config import IndexMeta
-from ..data import REQUEST_DELAY_SECONDS, fetch_price_history
+from ..db import get_price_history
 from .base import Stage
 
 # Lookback windows (trading days) and the weight applied to each when combining
@@ -94,18 +92,15 @@ class WeightedReturnsStage(Stage):
     def run(self, universe: list[IndexMeta]) -> pd.DataFrame:
         """Iterate the universe, fetch price data, and score each index. Bad data is kept as NaN, not dropped."""
         rows = []
-        for i, index in enumerate(universe):
+        for index in universe:
             row = {"ticker": index.ticker}
             try:
-                closes = fetch_price_history(index.ticker)["Close"]
+                closes = get_price_history(index.ticker)["Close"]
                 row.update(compute_returns(closes))
             except Exception as exc:
                 print(f"WARNING: {index.ticker} ({index.name}) failed, leaving as NaN: {exc}")
                 row.update(_nan_metrics())
             rows.append(row)
-
-            if i < len(universe) - 1:
-                time.sleep(REQUEST_DELAY_SECONDS)
 
         table = pd.DataFrame(rows)
         table = _add_rankings(table)
