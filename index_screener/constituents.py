@@ -12,6 +12,8 @@ CONSTITUENTS_SOURCE: dict[str, str] = {
     "^FTSE": "Wikipedia: en.wikipedia.org/wiki/FTSE_100_Index (captured 2026-08-15)",
     "^NDX": "Wikipedia: en.wikipedia.org/wiki/List_of_NASDAQ-100_companies (captured 2026-08-15)",
     "^DJI": "Wikipedia: en.wikipedia.org/wiki/Dow_Jones_Industrial_Average (captured 2026-08-15)",
+    "^GDAXI": "Wikipedia: en.wikipedia.org/wiki/DAX (captured 2026-08-15)",
+    "^FCHI": "Wikipedia: en.wikipedia.org/wiki/CAC_40 (captured 2026-08-15)",
 }
 
 # FTSE 100 constituents: Yahoo Finance ticker -> company name.
@@ -259,13 +261,109 @@ DJI30_CONSTITUENTS: dict[str, str] = {
     "WMT": "Walmart",
 }
 
+# DAX constituents: Yahoo Finance ticker -> company name.
+DAX_CONSTITUENTS: dict[str, str] = {
+    "ADS.DE": "Adidas",
+    "AIR.PA": "Airbus",
+    "ALV.DE": "Allianz",
+    "BAS.DE": "BASF",
+    "BAYN.DE": "Bayer",
+    "BEI.DE": "Beiersdorf",
+    "BMW.DE": "BMW",
+    "BNR.DE": "Brenntag",
+    "CBK.DE": "Commerzbank",
+    "CON.DE": "Continental",
+    "DTG.DE": "Daimler Truck",
+    "DBK.DE": "Deutsche Bank",
+    "DB1.DE": "Deutsche Börse",
+    "DHL.DE": "Deutsche Post",
+    "DTE.DE": "Deutsche Telekom",
+    "EOAN.DE": "E.ON",
+    "FRE.DE": "Fresenius",
+    "FME.DE": "Fresenius Medical Care",
+    "G1A.DE": "GEA Group",
+    "HNR1.DE": "Hannover Re",
+    "HEI.DE": "Heidelberg Materials",
+    "HEN3.DE": "Henkel",
+    "IFX.DE": "Infineon Technologies",
+    "MBG.DE": "Mercedes-Benz Group",
+    "MRK.DE": "Merck",
+    "MTX.DE": "MTU Aero Engines",
+    "MUV2.DE": "Munich Re",
+    "PAH3.DE": "Porsche SE",
+    "QIA.DE": "Qiagen",
+    "RHM.DE": "Rheinmetall",
+    "RWE.DE": "RWE",
+    "SAP.DE": "SAP",
+    "G24.DE": "Scout24",
+    "SIE.DE": "Siemens",
+    "ENR.DE": "Siemens Energy",
+    "SHL.DE": "Siemens Healthineers",
+    "SY1.DE": "Symrise",
+    "VOW3.DE": "Volkswagen Group",
+    "VNA.DE": "Vonovia",
+    "ZAL.DE": "Zalando",
+}
+
+# CAC 40 constituents: Yahoo Finance ticker -> company name.
+CAC40_CONSTITUENTS: dict[str, str] = {
+    "AC.PA": "Accor",
+    "AI.PA": "Air Liquide",
+    "AIR.PA": "Airbus",
+    "MT.AS": "ArcelorMittal",
+    "CS.PA": "Axa",
+    "BNP.PA": "BNP Paribas",
+    "EN.PA": "Bouygues",
+    "BVI.PA": "Bureau Veritas",
+    "CAP.PA": "Capgemini",
+    "CA.PA": "Carrefour",
+    "ACA.PA": "Crédit Agricole",
+    "BN.PA": "Danone",
+    "DSY.PA": "Dassault Systèmes",
+    "EDEN.PA": "Edenred",
+    "ENGI.PA": "Engie",
+    "EL.PA": "EssilorLuxottica",
+    "ERF.PA": "Eurofins Scientific",
+    "RMS.PA": "Hermès",
+    "KER.PA": "Kering",
+    "OR.PA": "L'Oréal",
+    "LR.PA": "Legrand",
+    "MC.PA": "LVMH",
+    "ML.PA": "Michelin",
+    "ORA.PA": "Orange",
+    "RI.PA": "Pernod Ricard",
+    "PUB.PA": "Publicis",
+    "RNO.PA": "Renault",
+    "SAF.PA": "Safran",
+    "SGO.PA": "Saint-Gobain",
+    "SAN.PA": "Sanofi",
+    "SU.PA": "Schneider Electric",
+    "GLE.PA": "Société Générale",
+    "STLAP.PA": "Stellantis",
+    "STMPA.PA": "STMicroelectronics",
+    "TEP.PA": "Teleperformance",
+    "HO.PA": "Thales",
+    "TTE.PA": "TotalEnergies",
+    "URW.PA": "Unibail-Rodamco-Westfield",
+    "VIE.PA": "Veolia",
+    "DG.PA": "Vinci",
+}
+
 # Registry: parent index ticker -> its constituents' Yahoo tickers.
 # Only indices listed here support constituent-level stages (e.g. breadth confirmation).
 INDEX_CONSTITUENTS: dict[str, list[str]] = {
     "^FTSE": list(FTSE100_CONSTITUENTS),
     "^NDX": list(NDX100_CONSTITUENTS),
     "^DJI": list(DJI30_CONSTITUENTS),
+    "^GDAXI": list(DAX_CONSTITUENTS),
+    "^FCHI": list(CAC40_CONSTITUENTS),
 }
 
 # ticker -> name, across all populated indices, for display purposes.
-CONSTITUENT_NAMES: dict[str, str] = {**FTSE100_CONSTITUENTS, **NDX100_CONSTITUENTS, **DJI30_CONSTITUENTS}
+CONSTITUENT_NAMES: dict[str, str] = {
+    **FTSE100_CONSTITUENTS,
+    **NDX100_CONSTITUENTS,
+    **DJI30_CONSTITUENTS,
+    **DAX_CONSTITUENTS,
+    **CAC40_CONSTITUENTS,
+}
