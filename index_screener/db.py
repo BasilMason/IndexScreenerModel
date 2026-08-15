@@ -107,3 +107,23 @@ def populate_tickers(tickers: list[str], period: str = FETCH_PERIOD, force_refre
             get_price_history(ticker, force_refresh=force_refresh, period=period)
         except Exception as exc:
             print(f"WARNING: {ticker} failed to populate: {exc}")
+
+
+def get_cache_summary() -> pd.DataFrame:
+    """Return per-ticker cache coverage: date range, row count, and staleness. Used for status/stats views."""
+    conn = _connect()
+    try:
+        df = pd.read_sql(
+            "SELECT ticker, MIN(date) AS first_date, MAX(date) AS last_date, COUNT(*) AS rows "
+            "FROM prices GROUP BY ticker ORDER BY ticker",
+            conn,
+        )
+    finally:
+        conn.close()
+
+    if df.empty:
+        return df
+
+    last_dates = pd.to_datetime(df["last_date"]).dt.date
+    df["is_stale"] = last_dates.apply(lambda d: (date.today() - d).days > STALE_AFTER_DAYS)
+    return df

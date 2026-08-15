@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Index Screener{% endblock %}
+
+{% block content %}
+<hgroup>
+  <h1>Dashboard</h1>
+  <p>Data available across the {{ stats.universe_count }}-index universe, cached in <code>market_data.db</code>.</p>
+</hgroup>
+
+<div class="stat-grid">
+  <article>
+    <p class="stat-value">{{ stats.cached_index_count }}/{{ stats.universe_count }}</p>
+    <p class="stat-label">Indices cached</p>
+  </article>
+  <article>
+    <p class="stat-value">{{ stats.stale_index_count }}</p>
+    <p class="stat-label">Need refresh</p>
+  </article>
+  <article>
+    <p class="stat-value">{{ stats.total_tickers_cached }}</p>
+    <p class="stat-label">Tickers cached</p>
+  </article>
+  <article>
+    <p class="stat-value">{{ "{:,}".format(stats.total_price_rows) }}</p>
+    <p class="stat-label">Price rows stored</p>
+  </article>
+  <article>
+    <p class="stat-value">{{ stats.indices_with_constituents }}</p>
+    <p class="stat-label">With constituents</p>
+  </article>
+  <article>
+    <p class="stat-value">{{ stats.active_stages | length }}/{{ stats.available_stages | length }}</p>
+    <p class="stat-label">Active stages</p>
+  </article>
+</div>
+
+<section>
+  <h2>Index status</h2>
+  <p>
+    Active screening stages: <strong>{{ stats.active_stages | join(", ") }}</strong>.
+    Built but not yet weighted into the final score:
+    <strong>{{ stats.inactive_stages | join(", ") or "none" }}</strong>.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th>Region</th>
+          <th>Last cached</th>
+          <th>Rows</th>
+          <th>Status</th>
+          <th>Constituents</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in stats.index_rows %}
+          {% include "partials/index_row.html" %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

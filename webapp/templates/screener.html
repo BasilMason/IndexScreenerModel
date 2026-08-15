@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Screener · Index Screener{% endblock %}
+
+{% block content %}
+<hgroup>
+  <h1>Screener</h1>
+  <p>Ranked by <code>final_score</code>, a weighted blend of the active stages: {{ active_stages | join(", ") }}.</p>
+</hgroup>
+
+<button hx-post="/screener/refresh"
+        hx-target="#screener-results"
+        hx-swap="innerHTML"
+        hx-indicator="#screener-results">
+  Force refresh all &amp; re-run
+</button>
+
+<div id="screener-results">
+  {% include "partials/screener_table.html" %}
+</div>
+{% endblock %}

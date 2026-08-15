@@ -1,0 +1,31 @@
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Index</th>
+        <th>Region</th>
+        {% for col in score_cols %}
+          <th>{{ col.replace("_score", "") | replace("_", " ") | title }}</th>
+        {% endfor %}
+        <th>Final score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td class="rank">{{ loop.index }}</td>
+        <td>
+          <a href="/indices/{{ row.ticker }}">{{ row.name }}</a><br>
+          <small class="ticker">{{ row.ticker }}</small>
+        </td>
+        <td>{{ row.region }}</td>
+        {% for col in score_cols %}
+          <td>{{ "%.2f"|format(row[col]) if row[col] is not none else "—" }}</td>
+        {% endfor %}
+        <td><strong>{{ "%.2f"|format(row.final_score) if row.final_score is not none else "—" }}</strong></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

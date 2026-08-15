@@ -1,0 +1,30 @@
+<tr id="row-{{ row.ticker }}">
+  <td>
+    <a href="/indices/{{ row.ticker }}">{{ row.name }}</a><br>
+    <small class="ticker">{{ row.ticker }}</small>
+  </td>
+  <td>{{ row.region }}</td>
+  <td>{{ row.last_date or "—" }}</td>
+  <td>{{ row.rows }}</td>
+  <td>
+    {% if not row.cached %}
+      <span class="badge badge-missing">Missing</span>
+    {% elif row.is_stale %}
+      <span class="badge badge-stale">Stale</span>
+    {% else %}
+      <span class="badge badge-fresh">Fresh</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if row.has_constituents %}{{ row.constituent_count }} stocks{% else %}—{% endif %}
+  </td>
+  <td>
+    <button class="outline secondary"
+            hx-post="/indices/{{ row.ticker }}/refresh"
+            hx-target="#row-{{ row.ticker }}"
+            hx-swap="outerHTML"
+            hx-indicator="#row-{{ row.ticker }}">
+      Refresh
+    </button>
+  </td>
+</tr>

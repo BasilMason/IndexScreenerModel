@@ -11,6 +11,7 @@ swap the source here - stages only depend on INDEX_CONSTITUENTS, not on how it's
 CONSTITUENTS_SOURCE: dict[str, str] = {
     "^FTSE": "Wikipedia: en.wikipedia.org/wiki/FTSE_100_Index (captured 2026-08-15)",
     "^NDX": "Wikipedia: en.wikipedia.org/wiki/List_of_NASDAQ-100_companies (captured 2026-08-15)",
+    "^DJI": "Wikipedia: en.wikipedia.org/wiki/Dow_Jones_Industrial_Average (captured 2026-08-15)",
 }
 
 # FTSE 100 constituents: Yahoo Finance ticker -> company name.
@@ -224,12 +225,47 @@ NDX100_CONSTITUENTS: dict[str, str] = {
     "XEL": "Xcel Energy",
 }
 
+# Dow Jones Industrial Average constituents: Yahoo Finance ticker -> company name.
+DJI30_CONSTITUENTS: dict[str, str] = {
+    "MMM": "3M",
+    "GOOGL": "Alphabet",
+    "AMZN": "Amazon",
+    "AXP": "American Express",
+    "AMGN": "Amgen",
+    "AAPL": "Apple",
+    "BA": "Boeing",
+    "CAT": "Caterpillar",
+    "CVX": "Chevron",
+    "CSCO": "Cisco",
+    "KO": "Coca-Cola",
+    "DIS": "Disney",
+    "GS": "Goldman Sachs",
+    "HD": "Home Depot",
+    "HON": "Honeywell Technologies",
+    "IBM": "IBM",
+    "JNJ": "Johnson & Johnson",
+    "JPM": "JPMorgan Chase",
+    "MCD": "McDonald's",
+    "MRK": "Merck",
+    "MSFT": "Microsoft",
+    "NKE": "Nike",
+    "NVDA": "Nvidia",
+    "PG": "Procter & Gamble",
+    "CRM": "Salesforce",
+    "SHW": "Sherwin-Williams",
+    "TRV": "Travelers",
+    "UNH": "UnitedHealth",
+    "V": "Visa",
+    "WMT": "Walmart",
+}
+
 # Registry: parent index ticker -> its constituents' Yahoo tickers.
 # Only indices listed here support constituent-level stages (e.g. breadth confirmation).
 INDEX_CONSTITUENTS: dict[str, list[str]] = {
     "^FTSE": list(FTSE100_CONSTITUENTS),
     "^NDX": list(NDX100_CONSTITUENTS),
+    "^DJI": list(DJI30_CONSTITUENTS),
 }
 
 # ticker -> name, across all populated indices, for display purposes.
-CONSTITUENT_NAMES: dict[str, str] = {**FTSE100_CONSTITUENTS, **NDX100_CONSTITUENTS}
+CONSTITUENT_NAMES: dict[str, str] = {**FTSE100_CONSTITUENTS, **NDX100_CONSTITUENTS, **DJI30_CONSTITUENTS}

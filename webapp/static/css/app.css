@@ -1,0 +1,64 @@
+/* Small additions on top of Pico.css's classless base - grid of stat cards,
+   status badges, and a couple of layout/loading-state tweaks. */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1rem;
+}
+
+.stat-grid article {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0 0 0.35rem;
+}
+
+.stat-label {
+  color: var(--pico-muted-color);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.badge-fresh { background: #1a7f37; }
+.badge-stale { background: #9a6700; }
+.badge-missing { background: #6e7781; }
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.rank {
+  color: var(--pico-muted-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.htmx-request {
+  opacity: 0.5;
+  transition: opacity 0.15s ease-in-out;
+}
+
+section + section {
+  margin-top: 2.5rem;
+}
+
+small.ticker {
+  color: var(--pico-muted-color);
+}
