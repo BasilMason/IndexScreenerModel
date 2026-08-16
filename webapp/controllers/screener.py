@@ -4,9 +4,9 @@ import json
 
 from fastapi import APIRouter, Request
 
-from index_screener.config import INDEX_UNIVERSE, STAGE_WEIGHTS
+from index_screener.config import STAGE_WEIGHTS
 from index_screener.db import populate_tickers
-from index_screener.screener import run_screen
+from index_screener.screener import SCREENING_UNIVERSE, run_screen
 from webapp.templating import templates
 
 router = APIRouter()
@@ -33,6 +33,6 @@ def screener(request: Request):
 
 @router.post("/screener/refresh")
 def refresh_and_rerun(request: Request):
-    """Force-refresh every index in the universe from Yahoo Finance, then re-run the screener (htmx partial)."""
-    populate_tickers([i.ticker for i in INDEX_UNIVERSE], force_refresh=True)
+    """Force-refresh every index currently being screened from Yahoo Finance, then re-run (htmx partial)."""
+    populate_tickers([i.ticker for i in SCREENING_UNIVERSE], force_refresh=True)
     return templates.TemplateResponse("partials/screener_table.html", _context(request))

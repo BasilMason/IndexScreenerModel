@@ -9,6 +9,7 @@ from STAGE_WEIGHTS - no code changes needed.
 import pandas as pd
 
 from .config import INDEX_UNIVERSE, STAGE_WEIGHTS
+from .constituents import INDEX_CONSTITUENTS
 from .stages.breadth_confirmation import BreadthConfirmationStage
 from .stages.ema_trend import EmaTrendStage
 from .stages.weighted_returns import WeightedReturnsStage
@@ -17,14 +18,21 @@ AVAILABLE_STAGES = {
     stage.name: stage for stage in [WeightedReturnsStage(), EmaTrendStage(), BreadthConfirmationStage()]
 }
 
+# Testing scope: until constituent lists are populated for the rest of the universe,
+# only screen indices that have full data available for every stage (including
+# breadth confirmation). Remove this filter once more indices have constituents.
+SCREENING_UNIVERSE = [i for i in INDEX_UNIVERSE if i.ticker in INDEX_CONSTITUENTS]
 
-def run_screen(stage_weights: dict[str, float] = STAGE_WEIGHTS) -> pd.DataFrame:
+
+def run_screen(
+    universe: list = SCREENING_UNIVERSE, stage_weights: dict[str, float] = STAGE_WEIGHTS
+) -> pd.DataFrame:
     """Run each configured stage, merge their scores onto the universe, and compute a weighted final_score."""
-    table = pd.DataFrame([{"ticker": i.ticker, "name": i.name, "region": i.region} for i in INDEX_UNIVERSE])
+    table = pd.DataFrame([{"ticker": i.ticker, "name": i.name, "region": i.region} for i in universe])
 
     for stage_name in stage_weights:
         stage = AVAILABLE_STAGES[stage_name]
-        table = table.merge(stage.run(INDEX_UNIVERSE), on="ticker", how="left")
+        table = table.merge(stage.run(universe), on="ticker", how="left")
 
     table["final_score"] = sum(
         weight * table[f"{stage_name}_score"] for stage_name, weight in stage_weights.items()
