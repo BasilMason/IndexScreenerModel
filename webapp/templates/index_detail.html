@@ -33,9 +33,28 @@
   {% if breadth %}
     <p>
       Source: <small>{{ breadth.source }}</small><br>
-      <strong>{{ breadth.breadth_pct }}%</strong> of constituents are trading above their 50-day SMA
-      ({{ breadth.scored_count }}/{{ breadth.constituent_count }} scored).
+      {{ breadth.scored_count }}/{{ breadth.constituent_count }} constituents scored.
     </p>
+
+    <div class="stat-grid">
+      <article>
+        <p class="stat-value">{{ breadth.sma50_score }}<small>/12</small></p>
+        <p class="stat-label">SMA50 breadth: {{ breadth.breadth_pct }}%</p>
+      </article>
+      <article>
+        <p class="stat-value">{{ breadth.adl_score }}<small>/4</small></p>
+        <p class="stat-label">10-day ADL: {{ breadth.adl_total }}</p>
+      </article>
+      <article>
+        <p class="stat-value">{{ breadth.new_high_low_score }}<small>/4</small></p>
+        <p class="stat-label">20-day new high/low: {{ breadth.new_high_low_pct }}%</p>
+      </article>
+      <article>
+        <p class="stat-value">{{ breadth.total_score }}<small>/20</small></p>
+        <p class="stat-label">Breadth confirmation total</p>
+      </article>
+    </div>
+
     <form method="post" action="/indices/{{ index.ticker }}/refresh-constituents">
       <button type="submit" class="outline secondary">
         Force refresh all {{ breadth.constituent_count }} constituents
@@ -44,7 +63,7 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Ticker</th><th>Name</th><th>Price</th><th>SMA50</th><th>Status</th></tr>
+          <tr><th>Ticker</th><th>Name</th><th>Price</th><th>SMA50</th><th>Status</th><th>20d high/low</th></tr>
         </thead>
         <tbody>
           {% for s in breadth.stocks %}
@@ -60,6 +79,15 @@
                 <span class="badge badge-fresh">Above</span>
               {% else %}
                 <span class="badge badge-stale">Below</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if s.new_high_low_score == 1 %}
+                <span class="badge badge-fresh">New high</span>
+              {% elif s.new_high_low_score == -1 %}
+                <span class="badge badge-stale">New low</span>
+              {% else %}
+                —
               {% endif %}
             </td>
           </tr>
